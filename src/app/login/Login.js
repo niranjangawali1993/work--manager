@@ -2,13 +2,16 @@
 
 import Image from 'next/image';
 import loginSVG from './../../assets/login.svg';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { login } from '@/services/userService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import UserContext from '../context/userContext';
 
 const Login = () => {
   const router = useRouter();
+  const context = useContext(UserContext);
+  const { setUser } = context;
 
   const [data, setData] = useState({
     email: '',
@@ -18,7 +21,6 @@ const Login = () => {
   const submitForm = async (e) => {
     try {
       e.preventDefault();
-      console.log(data);
       if (data.email.trim() == '' || data.email == null) {
         toast.warning('Email is required field !!!');
         return;
@@ -30,9 +32,9 @@ const Login = () => {
       }
 
       const result = await login(data);
-      console.log(result);
+      setUser(result.user);
 
-      toast('User created successfully !!!', {
+      toast('User logged in successfully !!!', {
         position: 'top-center',
       });
       resetForm(e);
@@ -46,6 +48,10 @@ const Login = () => {
 
   const resetForm = (e) => {
     e.preventDefault();
+    setData({
+      email: '',
+      password: '',
+    });
   };
 
   const onInputChange = (e, fieldName) => {

@@ -2,7 +2,6 @@ import { User } from '@/app/models/user';
 import { connectDb } from '@/helper/db';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-connectDb();
 
 export const GET = async () => {
   let users = [];
@@ -23,6 +22,8 @@ export const GET = async () => {
 
 export const POST = async (request) => {
   try {
+    await connectDb();
+
     const userBody = await request.json();
     const { name, email, password, about, profileURL } = userBody;
     const newUser = new User({ name, email, password, about, profileURL });

@@ -6,3 +6,17 @@ export const addTask = async (task) => {
     .then((response) => response.data);
   return result;
 };
+
+export const getUserTasks = async (userId) => {
+  const result = await httpAxios
+    .get(`/api/users/${userId}/tasks`)
+    .then((response) => response.data);
+  return result;
+};
+
+export const deleteTask = async (taskId) => {
+  const result = await httpAxios
+    .delete(`/api/tasks/${taskId}`)
+    .then((response) => response.data);
+  return result;
+};

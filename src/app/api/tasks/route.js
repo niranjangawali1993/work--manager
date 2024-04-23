@@ -2,11 +2,12 @@ import { Task } from '@/app/models/task';
 import { connectDb } from '@/helper/db';
 import { getResponseMessage } from '@/helper/responseMesssage';
 import { NextResponse } from 'next/server';
-connectDb();
 
 export const GET = async () => {
   let tasks = [];
   try {
+    await connectDb();
+
     tasks = await Task.find({});
     return NextResponse.json({
       message: 'Tasks found !!!',
@@ -20,8 +21,9 @@ export const GET = async () => {
 
 export const POST = async (request) => {
   try {
+    await connectDb();
+
     const reqBody = await request.json();
-    console.log(reqBody);
     const newTask = new Task(reqBody);
     const createdTask = await newTask.save();
     return NextResponse.json(createdTask, {

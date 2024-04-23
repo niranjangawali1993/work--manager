@@ -2,9 +2,12 @@ import { User } from '@/app/models/user';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { connectDb } from '@/helper/db';
 
 export const POST = async (request) => {
   try {
+    await connectDb();
+
     const { email, password } = await request.json();
     const selectedUser = await User.findOne({ email: email });
 
@@ -30,7 +33,7 @@ export const POST = async (request) => {
     });
 
     response.cookies.set('loginToken', token, {
-      expiresIn: '1d',
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day in milliseconds
       httpOnly: true,
     });
 

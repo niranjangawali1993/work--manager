@@ -1,9 +1,12 @@
 import { Task } from '@/app/models/task';
 import { getResponseMessage } from '@/helper/responseMesssage';
 import { NextResponse } from 'next/server';
+import { connectDb } from '@/helper/db';
 
 export const GET = async (request, { params }) => {
   try {
+    await connectDb();
+
     const taskId = params.taskId;
     const selectedTask = await Task.findOne({ _id: taskId });
     return NextResponse.json({
@@ -18,11 +21,14 @@ export const GET = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
   try {
+    await connectDb();
+
     const taskId = params.taskId;
     const deletedTask = await Task.findOneAndDelete(taskId);
     return NextResponse.json({
       message: `Deleting task details by id ${taskId}`,
       data: deletedTask,
+      status: true,
     });
   } catch (err) {
     console.error(err);
@@ -34,6 +40,8 @@ export const PUT = async (request, { params }) => {
   const taskId = params.taskId;
   const { title, content, status } = await request.json();
   try {
+    await connectDb();
+
     const task = await Task.findById(taskId);
     task.title = title;
     task.content = content;

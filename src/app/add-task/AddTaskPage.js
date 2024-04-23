@@ -1,16 +1,19 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import addTaskSVG from './../../assets/add-task.svg';
 import Image from 'next/image';
 import { addTask } from '@/services/taskService';
 import { toast } from 'react-toastify';
+import UserContext from '../context/userContext';
 
 const AddTaskPage = () => {
+  const context = useContext(UserContext);
+
   const [task, setTask] = useState({
     title: '',
     content: '',
     status: 'pending',
-    userId: '660e9963367e4d68d0f56726',
+    userId: context?.user?._id,
   });
 
   const onInputChange = (e, fieldName) => {
@@ -38,7 +41,6 @@ const AddTaskPage = () => {
       title: '',
       content: '',
       status: 'pending',
-      userId: '660e9963367e4d68d0f56726',
     });
   };
 

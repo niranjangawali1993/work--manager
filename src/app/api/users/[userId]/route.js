@@ -1,8 +1,11 @@
 import { User } from '@/app/models/user';
 import { NextResponse } from 'next/server';
+import { connectDb } from '@/helper/db';
 
 export const DELETE = async (request, { params }) => {
   try {
+    await connectDb();
+
     const userId = params.userId;
     const user = await User.findOneAndDelete(userId);
     return NextResponse.json({
@@ -20,6 +23,8 @@ export const DELETE = async (request, { params }) => {
 
 export const GET = async (request, { params }) => {
   try {
+    await connectDb();
+
     const userId = params.userId;
     const user = await User.findOne({ _id: userId });
     return NextResponse.json({
@@ -39,6 +44,8 @@ export const PUT = async (request, { params }) => {
   const userId = params.userId;
   const { name, password, about, profileURL } = await request.json();
   try {
+    await connectDb();
+
     const user = await User.findById(userId);
     user.name = name;
     user.password = password;
